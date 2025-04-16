@@ -1,5 +1,7 @@
 // 1. Nie zabezpieczamy w rejestru %r12 w procedurze F (callee-saved)
 // 2. Nie "sprzątamy" stosu po wyjściu z M
+// 3. F nie zachowuje wyrówniania do 16-u bitów więc musimy obniżyć stos o 8
+// - ale to naprawia punkt 1
 
 # źle:
 M:
@@ -39,7 +41,7 @@ M:
     call M
     movq %rax, %rdi
     call F
-    # movq (%rsp), %rdi # -- niby przywracamy wartość %rdi ale powinniśmy sprzątąć
+    movq (%rsp), %rdi # -- niby przywracamy wartość %rdi ale powinniśmy sprzątąć
     subq %rax, %rdi
 .L2:
     movq %rdi, %rax
